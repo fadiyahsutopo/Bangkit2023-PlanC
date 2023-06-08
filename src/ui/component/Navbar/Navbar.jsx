@@ -3,13 +3,13 @@ import { SearchIcon } from '@chakra-ui/icons';
 
 export function Navbar() {
   return (
-    <Box bg="teal.500" py={4} px={6} color="white">
+    <Box bg="#180E55" py={4} px={6} color="white">
       <Flex alignItems="center">
         <Heading size="md">Plan C</Heading>
         <InputGroup maxW="sm" mr={4} ml={10}>
           <Input placeholder="Search..." />
           <InputRightElement>
-            <Button colorScheme="teal" size="sm">
+            <Button colorScheme="#180E55" size="sm">
               <SearchIcon />
             </Button>
           </InputRightElement>
