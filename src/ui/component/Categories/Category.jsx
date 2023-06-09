@@ -1,16 +1,23 @@
 import { Box, Image, Text } from '@chakra-ui/react';
 
-function Category() {
+export function Category() {
   return (
-    <Box maxW="sm" borderWidth="1px" borderRadius="lg" overflow="hidden">
-      <Image src="https://example.com/your-image.jpg" alt="Card Image" />
-      <Box p="4">
-        <Text fontWeight="bold" fontSize="xl" mb="2">
-          Card Title
+    <Box width="200px" 
+    height="200px" 
+    borderRadius="27px" 
+    overflow="hidden" 
+    backgroundImage={require('../../../assets/images/beautiful.jpg')}
+    display="flex"
+    justifyContent="center"
+    alignItems="center"
+    backgroundPosition="center"
+    backgroundRepeat="no-repeat">
+      
+        <Text fontWeight="bold" fontSize="25pt" mb="2" color="white">
+          Pantai
         </Text>
-      </Box>
+      
     </Box>
   );
 }
 
-export default Category;
