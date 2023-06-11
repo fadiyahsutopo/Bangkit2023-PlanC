@@ -1,4 +1,4 @@
-import { Box, Image, Text } from '@chakra-ui/react';
+import { Box, Text } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 
 export function Category() {
@@ -14,13 +14,10 @@ export function Category() {
       backgroundPosition="center"
       backgroundRepeat="no-repeat">
       <Link to="/list">
-      <Text fontWeight="bold" fontSize="25pt" mb="2" color="white">
-          Pantai
-        </Text>
-        
+        <Text fontWeight="bold" fontSize="25pt" mb="2" color="white">
+            Pantai
+        </Text>    
       </Link>
-        
-      
-    </Box>
-  );
+    </Box>
+);
 }

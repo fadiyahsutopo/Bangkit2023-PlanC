@@ -6,15 +6,11 @@ import { Footer } from "../Footer/Footer";
 
 export function Layout () {
     return (
-        <>
-        <Navbar />
-    <Box minHeight="100vh" display="flex" flexDirection="column" justifyContent="center" alignItems="center">
-      
-
-      <Outlet />
-
-      
-    </Box>
+    <>
+    <Navbar />
+        <Box minHeight="100vh" display="flex" flexDirection="column" justifyContent="center" alignItems="center">
+          <Outlet />  
+        </Box>
     <Footer />
     </>
     )

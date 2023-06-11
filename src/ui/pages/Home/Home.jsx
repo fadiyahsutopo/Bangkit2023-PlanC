@@ -6,7 +6,7 @@ import { Category } from "../../component/Categories/Category";
 
 export function Home() {
     return (
-    <Box minHeight="100vh" display="flex" flexDirection="column">
+    <Box minHeight="100vh" display="flex" width={'full'} flexDirection="column">
       <Hero />
       <VStack
         flex="1"
@@ -20,12 +20,10 @@ export function Home() {
         </HStack>
         <Text fontWeight={"bold"}>Our Reccomendations</Text>
         <HStack alignItems={"flex-start"}>
-          
           <LongCard />
         </HStack>
-
-        <Text fontWeight={"bold"}>Near You</Text>
-        <HStack alignItems={"flex-start"} mt={5}>
+        <Text fontWeight={"bold"} mt={10}>Near You</Text>
+        <HStack alignItems={"flex-start"}>
           <LongCard />
         </HStack>
       </VStack>

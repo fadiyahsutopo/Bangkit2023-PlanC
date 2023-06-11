@@ -1,13 +1,10 @@
-import { Box, Text, Link } from '@chakra-ui/react';
+import { Box, Text } from '@chakra-ui/react';
 
 export function Footer() {
   return (
-    <Box bg="gray.200" py={4} px={6}>
+    <Box bg="gray.200" py={4} px={6} mt={20}>
       <Text textAlign="center" fontSize="sm">
-        © 2023 My App. All rights reserved. | Built with{' '}
-        <Link color="teal.500" href="https://chakra-ui.com" isExternal>
-          Chakra UI
-        </Link>
+        © 2023 PlanC. All rights reserved.
       </Text>
     </Box>
   );
