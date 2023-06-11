@@ -11,7 +11,7 @@ export function Hero ()  {
         backgroundColor="blackAlpha.600"
         justifyContent={'center'}
         >
-          <Text fontSize={'48px'} fontWeight={'800'} w='50%' color='white'>Where will your PlanC be?</Text>
+          <Text textAlign={'center'} fontSize={'48px'} fontWeight={'800'} w='50%' color='white'>Where will your PlanC be?</Text>
         </VStack>
     </VStack>
     </>
