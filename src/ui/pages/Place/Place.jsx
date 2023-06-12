@@ -9,15 +9,10 @@ export function Place() {
       w="80%"
       p="10"
       mt="20"
-      justifyContent={"flex-start"}
     >
-      <HStack w="full">
-        <Image src={Beautiful} w="50%" />
-        <VStack
-          fontSize={"40px"}
-          alignItems={"flex-start"}
-          justifyContent={"flex-start"}
-        >
+      <HStack w="full" alignItems={"flex-start"} mb={10}>
+        <Image src={Beautiful} w="50%" borderRadius={"30px"} mr={5} />
+        <VStack fontSize={"40px"} alignItems={"flex-start"} h="full">
           <Text>Pantai Kuta</Text>
           <Text>Rating</Text>
           <Text>Detail</Text>
