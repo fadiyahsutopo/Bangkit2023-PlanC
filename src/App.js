@@ -13,7 +13,7 @@ function App() {
           <Route index element={<Home />} />
           <Route path="fyt" element={<Fyt />} />
           <Route path="categories" element={<Categories />} />
-          <Route path="place" element={<Place />} />
+          <Route path="place/:id" element={<Place />} />
         </Route>
       </Routes>
     </BrowserRouter>
