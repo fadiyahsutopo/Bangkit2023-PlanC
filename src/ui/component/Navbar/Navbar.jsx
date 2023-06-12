@@ -1,6 +1,16 @@
-import { Box, Flex, Spacer, Heading, Input, InputGroup, InputRightElement, Button, HStack } from '@chakra-ui/react';
-import { SearchIcon } from '@chakra-ui/icons';
-import { Link } from 'react-router-dom';
+import {
+  Box,
+  Flex,
+  Spacer,
+  Heading,
+  Input,
+  InputGroup,
+  InputRightElement,
+  Button,
+  HStack,
+} from "@chakra-ui/react";
+import { SearchIcon } from "@chakra-ui/icons";
+import { Link } from "react-router-dom";
 
 export function Navbar() {
   return (
@@ -16,10 +26,14 @@ export function Navbar() {
           </InputRightElement>
         </InputGroup>
         <Spacer />
-        <HStack gap={'10px'}>       
-          <Link to={"/"}><Button colorScheme="whiteAlpha">Home</Button></Link>
-          <Link to={"/fyt"}><Button colorScheme="whiteAlpha">FYT</Button></Link>
-          <Button colorScheme="whiteAlpha">Contact</Button>
+        <HStack gap={"10px"}>
+          <Link to={"/"}>
+            <Button colorScheme="whiteAlpha">Home</Button>
+          </Link>
+          <Link to={"/fyt"}>
+            <Button colorScheme="whiteAlpha">FYT</Button>
+          </Link>
+          <Button colorScheme="whiteAlpha">Profile</Button>
         </HStack>
       </Flex>
     </Box>
