@@ -29,7 +29,14 @@ export function Login() {
   };
 
   return (
-    <Box p={4} textAlign="center">
+    <Box
+      p={4}
+      textAlign="center"
+      minHeight="100vh"
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+    >
       <Box
         display="inline-block"
         p={4}
