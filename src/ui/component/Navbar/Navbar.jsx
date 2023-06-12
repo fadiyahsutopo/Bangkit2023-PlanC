@@ -35,7 +35,9 @@ export function Navbar() {
           <Link to={"/fyt"}>
             <Button colorScheme="whiteAlpha">FYT</Button>
           </Link>
-          <Button colorScheme="whiteAlpha">Profile</Button>
+          <Link to={"/login"}>
+            <Button colorScheme="whiteAlpha">Login</Button>
+          </Link>
         </HStack>
       </Flex>
     </Box>
