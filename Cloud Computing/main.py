@@ -1,21 +1,173 @@
+from tensorflow.keras.layers import Input, Embedding, Flatten, Dropout, Dense, Concatenate
+from tensorflow.keras.models import Model
+from typing import Dict, Text
+import pandas as pd
+import numpy as np
 import requests
 import urllib.parse
 import json
 from flask import Flask, url_for, request
 
-# from keras.models import load_model
+from keras.models import load_model, model_from_json
+import tensorflow as tf
+import tensorflow_recommenders as tfrs
+
+from tensorflow import keras
+from tensorflow.keras import layers
+from keras.utils.data_utils import get_file
+# import tensorflow_hub as hub
+
+# from keras.model import load_weights
 # import h5py
 
-# prd_model = load_model('my_model.h5')
+# prd_model = tf.keras.Model()
+# print(prd_model)
+
+# # test
+# test_model = load_model('./models/test/my_model.h5')
+# print(test_model)
+
+# # Classif
+# classif_model = load_model('./models/classif/classification.h5')
+# print(classif_model.summary())
+
+# # Keras Model
+
+# # keras_model = load_model('./models/keras/keras_recommender.h5')
+# model_path = get_file(
+#     'keras_recommender',
+#     'https://storage.googleapis.com/planc-product-capstone-bucket/keras/keras_recommender.h5')
+# keras_model = load_model(model_path)
+# print(keras_model.summary())
+
+# # KERAS RECOMMENDATION
+
+# # rating = pd.read_csv('./models/keras/user_rating.csv')
+# # destination = pd.read_csv('./models/keras/planc_destinations.csv')
+# rating = pd.read_csv('https://storage.googleapis.com/planc-product-capstone-bucket/keras/user_rating.csv')
+# destination = pd.read_csv(
+#     'https://storage.googleapis.com/planc-product-capstone-bucket/keras/planc_destinations.csv')
+# print(destination.photos)
+# destination_array = np.array(list(set(rating.place_id)))
+
+# # set user id
+# user_id = 12
+# user = np.array([user_id for i in range(len(destination_array))])
+
+# print('user: ', user)
+# print('dest: ', destination_array)
+
+# predictions = keras_model.predict([user, destination_array])
+# predictions = np.array([a[0] for a in predictions])
+# recommended_place_id = (-predictions).argsort()[:5]
+
+# print(recommended_place_id)
+# print(predictions[recommended_place_id])
+# print(destination[destination['place_id'].isin(recommended_place_id)])
+
+# def recommendations(user_id=12, num_of_rec=5):
+#     print(num_of_rec, 'recommendations for', user_id)
+#     model_path = get_file(
+#         'keras_recommender',
+#         'https://storage.googleapis.com/planc-product-capstone-bucket/keras/keras_recommender.h5')
+#     keras_model = load_model(model_path)
+#     rating = pd.read_csv(
+#         'https://storage.googleapis.com/planc-product-capstone-bucket/keras/user_rating.csv')
+#     destination = pd.read_csv(
+#         'https://storage.googleapis.com/planc-product-capstone-bucket/keras/planc_destinations.csv')
+#     destination_array = np.array(list(set(rating.place_id)))
+#     user = np.array([user_id for i in range(len(destination_array))])
+
+#     predictions = keras_model.predict([user, destination_array])
+#     predictions = np.array([a[0] for a in predictions])
+#     recommended_place_id = (-predictions).argsort()[:num_of_rec]
+
+#     # print(recommended_place_id)
+#     # print(predictions[recommended_place_id])
+#     return destination[destination['place_id'].isin(recommended_place_id)]
+
+# # TFRS Model
+# tfrs_path = './models/tfrs/model.json'
+
+# json_file = open(tfrs_path, 'r')
+# loaded_model_json = json_file.read()
+# json_file.close()
+
+# loaded_model = tf.keras.models.model_from_json(
+#     loaded_model_json, custom_objects={'RecommenderModel': tf.keras.models.RecommenderModel})
+# config = loaded_model.get_config()
+# # tfrs_model = loaded_model.load_weights('./models/tfrs/model_weights.h5')
+# print("Loaded model from disk")
+# print(loaded_model)
+# # print(tfrs_model)
+
+# tfrs_model = load_model('./models/tfrs/model_weights.h5')
+# print(tfrs_model)
 
 app = Flask(__name__)
 
+# main API code
 
-@app.route('/apitest')
-def apitest():
+@app.route('/classification')
+def classification():
     return 'API working'
 
-# main API code
+@app.route('/')
+def index():
+    return "Hello, World!"
+
+@app.route('/recommend')
+@app.route('/recommend/<int:user_id>')
+@app.route('/recommend/<int:user_id>/<int:num_of_rec>')
+def recommend_id(user_id=12, num_of_rec=7):
+    model_path = get_file(
+        'keras_recommender',
+        'https://storage.googleapis.com/planc-product-capstone-bucket/keras/keras_recommender.h5')
+    keras_model = load_model(model_path)
+    rating = pd.read_csv(
+        'https://storage.googleapis.com/planc-product-capstone-bucket/keras/user_rating.csv')
+    destination = pd.read_csv(
+        'https://storage.googleapis.com/planc-product-capstone-bucket/keras/planc_destinations.csv')
+    destination_array = np.array(list(set(rating.place_id)))
+    user = np.array([user_id for i in range(len(destination_array))])
+
+    predictions = keras_model.predict([user, destination_array])
+    predictions = np.array([a[0] for a in predictions])
+    recommended_place_id = (-predictions).argsort()[:num_of_rec]
+
+    recommendation = destination[destination['place_id'].isin(
+        recommended_place_id)].to_json(orient='records')
+
+    # print(num_of_rec, 'recommendations for', user_id)
+    # print(recommended_place_id)
+    # print(predictions[recommended_place_id])
+    return recommendation
+
+
+@app.route('/destination/<int:dest_id>')
+def destination(dest_id):
+    destinations = pd.read_csv(
+        'https://storage.googleapis.com/planc-product-capstone-bucket/keras/planc_destinations.csv')
+    destination = destinations[destinations['place_id']
+                               == dest_id].to_json(orient='records')
+    return destination
+
+
+@app.route('/user/<int:user_id>')
+def user(user_id):
+    users = pd.read_csv(
+        'https://storage.googleapis.com/planc-product-capstone-bucket/keras/users.csv')
+    user = users[users['user_id'] == user_id].to_json(orient='records')
+    return user
+
+# COMING SOON
+# @app.route('/user/<string:user_id>')
+# def user(user_id):
+#     rating = pd.read_csv(
+#         'https://storage.googleapis.com/planc-product-capstone-bucket/keras/user_rating.csv')
+#     destination_array = np.array(list(set(rating.place_id)))
+#     user = np.array([user_id for i in range(len(destination_array))])
+#     return user.to_json()
 
 
 # @app.route('/sentiment', methods=['POST'])
