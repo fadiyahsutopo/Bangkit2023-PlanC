@@ -1,16 +1,16 @@
 import { Box, Text } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 
-export function LongCard() {
+export function LongCard(props) {
   return (
     <>
-      <Link to="/place">
+      <Link to={`/place/${props.placeID}`}>
         <Box
           minWidth="600px"
           height="200px"
           borderRadius="27px"
           overflow="hidden"
-          backgroundImage={require("../../../assets/images/beautiful.jpg")}
+          backgroundImage={props.photos}
           display="flex"
           justifyContent="center"
           alignItems="center"
@@ -18,7 +18,7 @@ export function LongCard() {
           backgroundSize="cover"
         >
           <Text fontWeight="bold" fontSize="25pt" mb="2" color="white">
-            Pantai Kuta
+            {props.placeName}
           </Text>
         </Box>
       </Link>
