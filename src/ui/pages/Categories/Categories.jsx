@@ -16,7 +16,7 @@ export function Categories() {
             backgroundRepeat="no-repeat"
           ></Box>
           <Text fontWeight="bold" fontSize="25pt" mb="2">
-            Pantai
+            Pantai Kuta
           </Text>
         </HStack>
       </Link>
@@ -31,7 +31,7 @@ export function Categories() {
           backgroundRepeat="no-repeat"
         ></Box>
         <Text fontWeight="bold" fontSize="25pt" mb="2">
-          Pantai
+          Pantai Anyer
         </Text>
       </HStack>
       <HStack gap={10}>

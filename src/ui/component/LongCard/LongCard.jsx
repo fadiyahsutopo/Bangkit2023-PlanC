@@ -18,7 +18,7 @@ export function LongCard() {
           backgroundSize="cover"
         >
           <Text fontWeight="bold" fontSize="25pt" mb="2" color="white">
-            Pantai
+            Pantai Kuta
           </Text>
         </Box>
       </Link>
