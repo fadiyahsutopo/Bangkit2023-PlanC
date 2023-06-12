@@ -18,7 +18,7 @@ export function Home() {
           <Category />
           <Category />
         </HStack>
-        <Text fontWeight={"bold"}>Our Reccomendations</Text>
+        <Text fontWeight={"bold"}>Our Recommendations</Text>
         <HStack alignItems={"flex-start"} spacing={10}>
           <LongCard />
           <LongCard />
