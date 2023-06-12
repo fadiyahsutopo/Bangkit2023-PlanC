@@ -16,15 +16,18 @@ export function Home() {
       >
         <HStack mb={10} spacing={10}>
           <Category />
+          <Category />
         </HStack>
         <Text fontWeight={"bold"}>Our Reccomendations</Text>
         <HStack alignItems={"flex-start"} spacing={10}>
+          <LongCard />
           <LongCard />
         </HStack>
         <Text fontWeight={"bold"} mt={10}>
           Near You
         </Text>
         <HStack alignItems={"flex-start"} spacing={10}>
+          <LongCard />
           <LongCard />
         </HStack>
       </VStack>
