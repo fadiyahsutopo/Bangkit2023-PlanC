@@ -16,7 +16,9 @@ export function Navbar() {
   return (
     <Box bg="#180E55" py={4} px={6} color="white">
       <Flex alignItems="center">
-        <Heading size="md">Plan C</Heading>
+        <Link to={"/"}>
+          <Heading size="md">Plan C</Heading>
+        </Link>
         <InputGroup maxW="sm" mr={4} ml={10}>
           <Input placeholder="Search..." />
           <InputRightElement>
