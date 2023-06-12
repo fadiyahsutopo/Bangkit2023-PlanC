@@ -1,4 +1,4 @@
-import { Box, HStack, Image, Text, VStack } from "@chakra-ui/react";
+import { HStack, Image, Text, VStack } from "@chakra-ui/react";
 import Plus from "../../../assets/images/plus.svg";
 import Camera from "../../../assets/images/camera.svg";
 import Beautiful from "../../../assets/images/beautiful.jpg";

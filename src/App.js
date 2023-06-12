@@ -3,6 +3,7 @@ import { Home } from "./ui/pages/Home/Home";
 import { Fyt } from "./ui/pages/FYT/Fyt";
 import { Layout } from "./ui/component/Layout/Layout";
 import { Categories } from "./ui/pages/Categories/Categories";
+import { Place } from "./ui/pages/Place/Place";
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
           <Route index element={<Home />} />
           <Route path="fyt" element={<Fyt />} />
           <Route path="categories" element={<Categories />} />
+          <Route path="place" element={<Place />} />
         </Route>
       </Routes>
     </BrowserRouter>
