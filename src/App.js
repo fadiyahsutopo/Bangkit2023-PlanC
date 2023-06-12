@@ -2,6 +2,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Home } from "./ui/pages/Home/Home";
 import { Fyt } from "./ui/pages/FYT/Fyt";
 import { Layout } from "./ui/component/Layout/Layout";
+import { Categories } from "./ui/pages/Categories/Categories";
 
 function App() {
   return (
@@ -10,6 +11,7 @@ function App() {
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
           <Route path="fyt" element={<Fyt />} />
+          <Route path="categories" element={<Categories />} />
         </Route>
       </Routes>
     </BrowserRouter>
