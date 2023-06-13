@@ -7,6 +7,7 @@ import React, { useEffect, useState } from "react";
 export function Home() {
   const [categoriesData, setCategoriesData] = useState(null);
   const [recommendationData, setRecommendationsData] = useState(null);
+  const [nearYouData, setNearYouData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -15,6 +16,7 @@ export function Home() {
         const urls = [
           "http://34.30.121.154:5000/categories",
           "http://34.30.121.154:5000/recommend/12/2",
+          "http://34.30.121.154:5000/nearest",
         ];
         const responses = await Promise.all(urls.map((url) => fetch(url)));
         const jsonDatas = await Promise.all(
@@ -25,6 +27,8 @@ export function Home() {
         console.log(jsonDatas[0]);
         setRecommendationsData(jsonDatas[1]);
         console.log(jsonDatas[1]);
+        setNearYouData(jsonDatas[2]);
+        console.log(jsonDatas[2]);
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
@@ -75,8 +79,18 @@ export function Home() {
           Near You
         </Text>
         <HStack alignItems={"flex-start"} spacing={10}>
-          <LongCard />
-          <LongCard />
+          {nearYouData && (
+            <HStack alignItems={"flex-start"} spacing={10}>
+              {nearYouData.map((item) => (
+                <LongCard
+                  key={item.place_id}
+                  placeName={item.place_name}
+                  photos={item.photos}
+                  placeID={item.place_id}
+                />
+              ))}
+            </HStack>
+          )}
         </HStack>
       </VStack>
     </Box>
