@@ -213,10 +213,12 @@ def categories():
     destinations = pd.read_csv(
         'https://storage.googleapis.com/planc-product-capstone-bucket/keras/planc_destinations.csv')
     types = destinations['types'].unique()
-    categories = {}
+    categories = []
     for type in types:
-        categories.update(
-            {type: destinations[destinations['types'] == type]['photos'].sample().iloc[0]})
+        photos = destinations[destinations['types']
+                              == type]['photos'].sample().iloc[0]
+        categories.append({'types': type,
+                           'photos': photos})
     return categories
 
 

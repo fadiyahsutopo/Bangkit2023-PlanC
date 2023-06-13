@@ -11,13 +11,16 @@ import math
 app = Flask(__name__)
 CORS(app)
 
+
 @app.route('/')
 def index():
     return "Hello, World!"
 
+
 @app.route('/api')
 def api():
     return "API Running"
+
 
 @app.route('/recommend')
 @app.route('/recommend/<int:user_id>')
@@ -46,6 +49,7 @@ def recommend_id(user_id=12, num_of_rec=7):
     recommendation = recommendation.to_json(orient='records')
 
     return recommendation
+
 
 @app.route('/nearest')
 @app.route('/nearest/<int:lat>/<int:lng>')
@@ -79,6 +83,7 @@ def nearest(lat=0.0, lng=0.0, num=5):
     nearest = nearest.to_json(orient='records')
     return nearest
 
+
 @app.route('/destination/<int:dest_id>')
 def destination(dest_id):
     destinations = pd.read_csv(
@@ -93,11 +98,14 @@ def categories():
     destinations = pd.read_csv(
         'https://storage.googleapis.com/planc-product-capstone-bucket/keras/planc_destinations.csv')
     types = destinations['types'].unique()
-    categories = {}
+    categories = []
     for type in types:
-        categories.update(
-            {type: destinations[destinations['types'] == type]['photos'].sample().iloc[0]})
+        photos = destinations[destinations['types']
+                              == type]['photos'].sample().iloc[0]
+        categories.append({'types': type,
+                           'photos': photos})
     return categories
+
 
 @app.route('/category/<string:category>')
 def category(category):
@@ -107,12 +115,14 @@ def category(category):
                                == category].to_json(orient='records')
     return destination
 
+
 @app.route('/user/<int:user_id>')
 def user(user_id):
     users = pd.read_csv(
         'https://storage.googleapis.com/planc-product-capstone-bucket/keras/users.csv')
     user = users[users['user_id'] == user_id].to_json(orient='records')
     return user
+
 
 if __name__ == '__app__':
     app.run(host='0.0.0.0', port=5000)
