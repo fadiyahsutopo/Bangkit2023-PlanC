@@ -1,4 +1,4 @@
-import { HStack, Image, Text, VStack } from "@chakra-ui/react";
+import { HStack, Image, Text, VStack, Box, Spinner } from "@chakra-ui/react";
 import { useParams } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 
@@ -29,7 +29,11 @@ export function Place(props) {
   }, [id]);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <Box display="flex" alignItems="center" justifyContent="center" h="100vh">
+        <Spinner size="xl" color="blue.500" />
+      </Box>
+    );
   }
 
   return (

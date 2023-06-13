@@ -1,4 +1,4 @@
-import { Box, HStack, Text, VStack } from "@chakra-ui/react";
+import { Box, HStack, Text, VStack, Spinner } from "@chakra-ui/react";
 import { Hero } from "../../component/Hero/Hero";
 import { LongCard } from "../../component/LongCard/LongCard";
 import { Category } from "../../component/Categories/Category";
@@ -15,7 +15,7 @@ export function Home() {
       try {
         const urls = [
           "http://34.30.121.154:5000/categories",
-          "http://34.30.121.154:5000/recommend/12/2",
+          "http://34.30.121.154:5000/recommend/12/5",
           "http://34.30.121.154:5000/nearest",
         ];
         const responses = await Promise.all(urls.map((url) => fetch(url)));
@@ -40,7 +40,11 @@ export function Home() {
   }, []);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <Box display="flex" alignItems="center" justifyContent="center" h="100vh">
+        <Spinner size="xl" color="blue.500" />
+      </Box>
+    );
   }
 
   return (
@@ -53,34 +57,42 @@ export function Home() {
         pl={10}
         pt={20}
       >
-        <HStack mb={10} spacing={10}>
+        <Box overflowX="auto" w="100%">
           {categoriesData && (
-            <>
+            <HStack mb={5} spacing={10}>
               {categoriesData.map((item) => (
-                <Category type={item.types} photo={item.photos} />
+                <Category
+                  key={item.types}
+                  type={item.types}
+                  photo={item.photos}
+                />
               ))}
-            </>
+            </HStack>
           )}
-        </HStack>
-        <Text fontWeight={"bold"}>Our Recommendations</Text>
-        {recommendationData && (
-          <HStack alignItems={"flex-start"} spacing={10}>
-            {recommendationData.map((item) => (
-              <LongCard
-                key={item.place_id}
-                placeName={item.place_name}
-                photos={item.photos}
-                placeID={item.place_id}
-              />
-            ))}
-          </HStack>
-        )}
+        </Box>
+        <Text fontWeight={"bold"} mt={10}>
+          Our Recommendations
+        </Text>
+        <Box overflowX="auto" w="100%">
+          {recommendationData && (
+            <HStack mb={5} alignItems={"flex-start"} spacing={10}>
+              {recommendationData.map((item) => (
+                <LongCard
+                  key={item.place_id}
+                  placeName={item.place_name}
+                  photos={item.photos}
+                  placeID={item.place_id}
+                />
+              ))}
+            </HStack>
+          )}
+        </Box>
         <Text fontWeight={"bold"} mt={10}>
           Near You
         </Text>
-        <HStack alignItems={"flex-start"} spacing={10}>
+        <Box overflowX="auto" w="100%">
           {nearYouData && (
-            <HStack alignItems={"flex-start"} spacing={10}>
+            <HStack mb={5} alignItems={"flex-start"} spacing={10}>
               {nearYouData.map((item) => (
                 <LongCard
                   key={item.place_id}
@@ -91,7 +103,7 @@ export function Home() {
               ))}
             </HStack>
           )}
-        </HStack>
+        </Box>
       </VStack>
     </Box>
   );

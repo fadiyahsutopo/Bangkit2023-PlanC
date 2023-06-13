@@ -1,4 +1,4 @@
-import { SimpleGrid } from "@chakra-ui/react";
+import { SimpleGrid, Box, Spinner } from "@chakra-ui/react";
 import { PlaceShort } from "../../component/Places/PlaceShort";
 import { useParams } from "react-router";
 import React, { useEffect, useState } from "react";
@@ -30,7 +30,11 @@ export function Categories() {
   }, [id]);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <Box display="flex" alignItems="center" justifyContent="center" h="100vh">
+        <Spinner size="xl" color="blue.500" />
+      </Box>
+    );
   }
 
   return (
