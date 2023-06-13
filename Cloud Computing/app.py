@@ -125,6 +125,14 @@ def user(user_id):
     user = users[users['user_id'] == user_id].to_json(orient='records')
     return user
 
+@app.route('/search/<string:query>')
+def search(query):
+    destinations = pd.read_csv(
+        'https://storage.googleapis.com/planc-product-capstone-bucket/keras/planc_destinations.csv')
+    filtered_destinations = destinations[destinations['place_name'].str.contains(query, case=False)]
+    destination = filtered_destinations.to_json(orient='records')
+    return destination
+
 
 if __name__ == '__app__':
     app.run(host='0.0.0.0', port=5000)
