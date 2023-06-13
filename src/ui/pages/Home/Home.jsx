@@ -5,20 +5,26 @@ import { Category } from "../../component/Categories/Category";
 import React, { useEffect, useState } from "react";
 
 export function Home() {
+  const [categoriesData, setCategoriesData] = useState(null);
   const [recommendationData, setRecommendationsData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const urls = ["http://34.30.121.154:5000/recommend/12/2"];
+        const urls = [
+          "http://34.30.121.154:5000/categories",
+          "http://34.30.121.154:5000/recommend/12/2",
+        ];
         const responses = await Promise.all(urls.map((url) => fetch(url)));
         const jsonDatas = await Promise.all(
           responses.map((response) => response.json())
         );
 
-        setRecommendationsData(jsonDatas[0]);
+        setCategoriesData(jsonDatas[0]);
         console.log(jsonDatas[0]);
+        setRecommendationsData(jsonDatas[1]);
+        console.log(jsonDatas[1]);
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
@@ -44,8 +50,13 @@ export function Home() {
         pt={20}
       >
         <HStack mb={10} spacing={10}>
-          <Category />
-          <Category />
+          {categoriesData && (
+            <>
+              {categoriesData.map((item) => (
+                <Category type={item.types} photo={item.photos} />
+              ))}
+            </>
+          )}
         </HStack>
         <Text fontWeight={"bold"}>Our Recommendations</Text>
         {recommendationData && (

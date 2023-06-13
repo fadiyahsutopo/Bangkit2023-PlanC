@@ -1,15 +1,15 @@
 import { Box, Text } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 
-export function Category() {
+export function Category(props) {
   return (
-    <Link to="/categories">
+    <Link to={`/category/${props.type}`}>
       <Box
         width="200px"
         height="200px"
         borderRadius="27px"
         overflow="hidden"
-        backgroundImage={require("../../../assets/images/beautiful.jpg")}
+        backgroundImage={props.photo}
         display="flex"
         justifyContent="center"
         alignItems="center"
@@ -17,7 +17,7 @@ export function Category() {
         backgroundRepeat="no-repeat"
       >
         <Text fontWeight="bold" fontSize="25pt" mb="2" color="white">
-          Pantai
+          {props.type}
         </Text>
       </Box>
     </Link>

@@ -1,5 +1,4 @@
 import { HStack, Image, Text, VStack } from "@chakra-ui/react";
-import Beautiful from "../../../assets/images/beautiful.jpg";
 import { useParams } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 
