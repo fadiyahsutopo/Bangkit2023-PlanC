@@ -219,6 +219,7 @@ def categories():
                               == type]['photos'].sample().iloc[0]
         categories.append({'types': type,
                            'photos': photos})
+    categories = json.dumps(categories)
     return categories
 
 

@@ -7,6 +7,7 @@ from keras.utils.data_utils import get_file
 import pandas as pd
 import numpy as np
 import math
+import json
 
 app = Flask(__name__)
 CORS(app)
@@ -104,6 +105,7 @@ def categories():
                               == type]['photos'].sample().iloc[0]
         categories.append({'types': type,
                            'photos': photos})
+    categories = json.dumps(categories)
     return categories
 
 
