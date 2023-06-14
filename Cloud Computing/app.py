@@ -1,14 +1,24 @@
 from flask_cors import CORS
-from flask import Flask
+from flask import Flask, jsonify
 from flask import request as req
 
 from keras.models import load_model
 from keras.utils.data_utils import get_file
 
+from flask_jwt_extended import (
+    JWTManager, jwt_required, create_access_token,
+    get_jwt_identity
+)
+
+from google.cloud import storage
+
 import pandas as pd
 import numpy as np
 import math
 import json
+import uuid
+import os
+import csv
 
 import fyt
 
@@ -16,7 +26,8 @@ from urllib import request
 
 app = Flask(__name__)
 CORS(app)
-
+app.config['JWT_SECRET_KEY'] = 'planc-ganteng'
+jwt = JWTManager(app)
 
 @app.route('/')
 def index():
@@ -136,6 +147,85 @@ def user(user_id):
     user = users[users['user_id'] == user_id].to_json(orient='records')
     return user
 
+@app.route('/search/<string:query>')
+def search(query):
+    destinations = pd.read_csv(
+        'https://storage.googleapis.com/planc-product-capstone-bucket/keras/planc_destinations.csv')
+    filtered_destinations = destinations[destinations['place_name'].str.contains(query, case=False)]
+    destination = filtered_destinations.to_json(orient='records')
+    return destination
+
+def upload_image_to_bucket(bucket_name, file, service_account_key):
+    client = storage.Client.from_service_account_json(service_account_key)
+
+    bucket = client.bucket(bucket_name)
+
+    unique_filename = str(uuid.uuid4()) + os.path.splitext(file.filename)[1]
+
+    file.save('/tmp/' + unique_filename)
+
+    blob = bucket.blob("image_from_fyt/" + unique_filename)
+
+    blob.upload_from_filename('/tmp/' + unique_filename)
+
+    os.remove('/tmp/' + unique_filename)
+
+    image_url = blob.public_url
+    return image_url
+
+def append_to_csv(bucket_name, file_name, data, service_account_key):
+    client = storage.Client.from_service_account_json(service_account_key)
+    bucket = client.get_bucket(bucket_name)
+    blob = bucket.blob(file_name)
+
+    print("writing to csv")
+    blob.download_to_filename('/tmp/temp.csv')
+
+    with open('/tmp/temp.csv', 'a', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(data)
+
+    blob.upload_from_filename('/tmp/temp.csv')
+
+    return blob.public_url
+
+@app.route('/upload', methods=['POST'])
+def upload(): 
+
+    if 'image' not in req.files:
+        return "No file found", 400
+
+    service_account_key = "./product-capstone-b5b859f751a2.json"
+
+    image_url = upload_image_to_bucket('planc-product-capstone-bucket', req.files['image'], service_account_key)
+
+    append_to_csv('planc-product-capstone-bucket', 'keras/fyt.csv', ["1", image_url], service_account_key)
+
+    return jsonify({
+        "message": f"Image uploaded to bucket"
+    })
+
+@app.route('/login', methods=['POST'])
+def login():
+    username = req.json.get('username')
+    password = req.json.get('password')
+
+    if password != 'password':
+        return jsonify({'message': 'Invalid password'}), 401
+
+    users = pd.read_csv(
+        'https://storage.googleapis.com/planc-product-capstone-bucket/keras/users.csv')
+    filtered_user = users[users['username'] == username]
+
+    if filtered_user.empty:
+        return jsonify({'message': 'User not found'}), 404
+
+    # Get the value of 'username_id' column from the first row
+    username_id =  int(filtered_user['user_id'].iloc[0])
+
+    access_token = create_access_token(identity=username)
+
+    return jsonify({'access_token': access_token, 'user_id': username_id})
 
 @app.route('/fyt')
 @app.route('/fyt/<int:num>')
