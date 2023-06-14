@@ -29,6 +29,7 @@ CORS(app)
 app.config['JWT_SECRET_KEY'] = 'planc-ganteng'
 jwt = JWTManager(app)
 
+
 @app.route('/')
 def index():
     return "Hello, World!"
@@ -147,13 +148,6 @@ def user(user_id):
     user = users[users['user_id'] == user_id].to_json(orient='records')
     return user
 
-@app.route('/search/<string:query>')
-def search(query):
-    destinations = pd.read_csv(
-        'https://storage.googleapis.com/planc-product-capstone-bucket/keras/planc_destinations.csv')
-    filtered_destinations = destinations[destinations['place_name'].str.contains(query, case=False)]
-    destination = filtered_destinations.to_json(orient='records')
-    return destination
 
 def upload_image_to_bucket(bucket_name, file, service_account_key):
     client = storage.Client.from_service_account_json(service_account_key)
@@ -173,6 +167,7 @@ def upload_image_to_bucket(bucket_name, file, service_account_key):
     image_url = blob.public_url
     return image_url
 
+
 def append_to_csv(bucket_name, file_name, data, service_account_key):
     client = storage.Client.from_service_account_json(service_account_key)
     bucket = client.get_bucket(bucket_name)
@@ -189,21 +184,25 @@ def append_to_csv(bucket_name, file_name, data, service_account_key):
 
     return blob.public_url
 
+
 @app.route('/upload', methods=['POST'])
-def upload(): 
+def upload():
 
     if 'image' not in req.files:
         return "No file found", 400
 
     service_account_key = "./product-capstone-b5b859f751a2.json"
 
-    image_url = upload_image_to_bucket('planc-product-capstone-bucket', req.files['image'], service_account_key)
+    image_url = upload_image_to_bucket(
+        'planc-product-capstone-bucket', req.files['image'], service_account_key)
 
-    append_to_csv('planc-product-capstone-bucket', 'keras/fyt.csv', ["1", image_url], service_account_key)
+    append_to_csv('planc-product-capstone-bucket', 'keras/fyt.csv',
+                  ["1", image_url], service_account_key)
 
     return jsonify({
         "message": f"Image uploaded to bucket"
     })
+
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -221,11 +220,12 @@ def login():
         return jsonify({'message': 'User not found'}), 404
 
     # Get the value of 'username_id' column from the first row
-    username_id =  int(filtered_user['user_id'].iloc[0])
+    username_id = int(filtered_user['user_id'].iloc[0])
 
     access_token = create_access_token(identity=username)
 
     return jsonify({'access_token': access_token, 'user_id': username_id})
+
 
 @app.route('/fyt')
 @app.route('/fyt/<int:num>')

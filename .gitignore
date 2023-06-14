@@ -1,2 +1,11 @@
+Cloud Computing/__pycache__/
 Cloud Computing/__pycache__/*
 env/
+
+
+Cloud Computing/classifications.h5
+Cloud Computing/keras_recommender.h5
+Cloud Computing/PlanC.csv
+Cloud Computing/planc_destinations.csv
+Cloud Computing/user_rating.csv
+Cloud Computing/users.csv
