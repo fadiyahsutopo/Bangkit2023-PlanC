@@ -6,6 +6,7 @@ import { Categories } from "./ui/pages/Categories/Categories";
 import { Place } from "./ui/pages/Place/Place";
 import React from "react";
 import { Login } from "./ui/pages/Login/login";
+import { Search } from "./ui/pages/Search/Search";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path="fyt" element={<Fyt />} />
           <Route path="category/:id" element={<Categories />} />
           <Route path="place/:id" element={<Place />} />
+          <Route path="search/:query" element={<Search />} />
         </Route>
         <Route path="login" element={<Login />} />
       </Routes>
