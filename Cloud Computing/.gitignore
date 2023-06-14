@@ -1,0 +1,11 @@
+/__pycache__
+/fyt
+
+/env
+/models
+
+main.py
+download.py
+
+classifications.h5
+PlanC.csv

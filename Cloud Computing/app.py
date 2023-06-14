@@ -1,5 +1,6 @@
 from flask_cors import CORS
 from flask import Flask
+from flask import request as req
 
 from keras.models import load_model
 from keras.utils.data_utils import get_file
@@ -8,6 +9,10 @@ import pandas as pd
 import numpy as np
 import math
 import json
+
+import fyt
+
+from urllib import request
 
 app = Flask(__name__)
 CORS(app)
@@ -52,10 +57,16 @@ def recommend_id(user_id=12, num_of_rec=7):
     return recommendation
 
 
-@app.route('/nearest')
+@app.route('/nearest', methods=["POST", "GET"])
+@app.route('/nearest/<int:num>', methods=["POST", "GET"])
 @app.route('/nearest/<int:lat>/<int:lng>')
 @app.route('/nearest/<int:lat>/<int:lng>/<int:num>')
 def nearest(lat=0.0, lng=0.0, num=5):
+    if req.method == "POST":
+        data = req.json
+        lat = data.get("lat")
+        lng = data.get("lng")
+
     destinations = pd.read_csv(
         'https://storage.googleapis.com/planc-product-capstone-bucket/keras/planc_destinations.csv')
     destinations = destinations.reset_index()
@@ -124,6 +135,42 @@ def user(user_id):
         'https://storage.googleapis.com/planc-product-capstone-bucket/keras/users.csv')
     user = users[users['user_id'] == user_id].to_json(orient='records')
     return user
+
+
+@app.route('/fyt')
+@app.route('/fyt/<int:num>')
+def fytpage(num=10):
+    img_url = 'https://storage.googleapis.com/planc-product-capstone-bucket/user_img/user_img/gunung/1_gunung.jpg'
+    fyt_page = fyt.for_your_trip(img_url, num).to_json(orient='records')
+    return fyt_page
+
+
+@app.route('/update_data')
+def update():
+    response = request.urlretrieve(
+        "https://storage.googleapis.com/planc-product-capstone-bucket/keras/keras_recommender.h5", "keras_recommender.h5")
+    response = request.urlretrieve(
+        "https://storage.googleapis.com/planc-product-capstone-bucket/keras/planc_destinations.csv", "planc_destinations.csv")
+    response = request.urlretrieve(
+        "https://storage.googleapis.com/planc-product-capstone-bucket/keras/user_rating.csv", "user_rating.csv")
+    response = request.urlretrieve(
+        "https://storage.googleapis.com/planc-product-capstone-bucket/keras/users.csv", "users.csv")
+    # response = request.urlretrieve(
+    #     "https://storage.googleapis.com/planc-product-capstone-bucket/fyt/classifications.h5", "classifications.h5")
+    # response = request.urlretrieve(
+    #     "https://storage.googleapis.com/planc-product-capstone-bucket/fyt/PlanC.csv", "PlanC.csv")
+    fyt.update_data()
+    return 'Update Success'
+
+
+@app.route('/search/<string:query>')
+def search(query):
+    destinations = pd.read_csv(
+        'https://storage.googleapis.com/planc-product-capstone-bucket/keras/planc_destinations.csv')
+    filtered_destinations = destinations[destinations['place_name'].str.contains(
+        query, case=False)]
+    destination = filtered_destinations.to_json(orient='records')
+    return destination
 
 
 if __name__ == '__app__':
