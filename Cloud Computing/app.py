@@ -1,13 +1,18 @@
 from flask_cors import CORS
-from flask import Flask
+from flask import Flask, request, jsonify
 
 from keras.models import load_model
 from keras.utils.data_utils import get_file
+
+from google.cloud import storage
 
 import pandas as pd
 import numpy as np
 import math
 import json
+import uuid
+import os
+import csv
 
 app = Flask(__name__)
 CORS(app)
@@ -132,6 +137,69 @@ def search(query):
     filtered_destinations = destinations[destinations['place_name'].str.contains(query, case=False)]
     destination = filtered_destinations.to_json(orient='records')
     return destination
+
+def upload_image_to_bucket(bucket_name, file, service_account_key):
+    # Instantiate the client
+    client = storage.Client.from_service_account_json(service_account_key)
+
+    bucket = client.bucket(bucket_name)
+
+    # Generate a unique filename
+    unique_filename = str(uuid.uuid4()) + os.path.splitext(file.filename)[1]
+
+    # Save the uploaded file to a temporary location with the unique filename
+    file.save('/tmp/' + unique_filename)
+
+    blob = bucket.blob("image_from_fyt/" + unique_filename)
+
+    # Upload the image file to the bucket
+    blob.upload_from_filename('/tmp/' + unique_filename)
+
+    # Delete the temporary file
+    os.remove('/tmp/' + unique_filename)
+
+    image_url = blob.public_url
+    return image_url
+
+def append_to_csv(bucket_name, file_name, data, service_account_key):
+    client = storage.Client.from_service_account_json(service_account_key)
+    bucket = client.get_bucket(bucket_name)
+    blob = bucket.blob(file_name)
+
+    print("writing to csv")
+    # Download the existing CSV file
+    blob.download_to_filename('/tmp/temp.csv')
+
+    # Append new data to the file in memory
+    with open('/tmp/temp.csv', 'a', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(data)
+
+    # Upload the updated file back to the bucket
+    blob.upload_from_filename('/tmp/temp.csv')
+
+    return blob.public_url
+
+@app.route('/upload', methods=['POST'])
+def upload(): 
+
+    if 'image' not in request.files:
+        return "No file found", 400
+
+    # Set path to your service account key JSON file
+    service_account_key = "./product-capstone-b5b859f751a2.json"
+
+    # Uplaod image to bucket
+    image_url = upload_image_to_bucket('planc-product-capstone-bucket', request.files['image'], service_account_key)
+
+    # Start updating csv
+    append_to_csv('planc-product-capstone-bucket', 'keras/fyt.csv', ["1", image_url], service_account_key)
+
+    return jsonify({
+        "message": f"Image uploaded to bucket"
+    })
+
+
 
 
 if __name__ == '__app__':
