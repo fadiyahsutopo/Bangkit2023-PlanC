@@ -7,6 +7,9 @@ import {
   Input,
   VStack,
 } from "@chakra-ui/react";
+import { toast } from "react-toastify";
+import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";
 
 export function Login() {
   const [isSignUp, setIsSignUp] = useState(false);
@@ -16,12 +19,42 @@ export function Login() {
   const [signupEmail, setSignupEmail] = useState("");
   const [signupPassword, setSignupPassword] = useState("");
 
+  const navigate = useNavigate();
+
   const handleLogin = () => {
     console.log("Login dengan username:", loginUsername);
     console.log("Password:", loginPassword);
+
+    const payload = {
+      username: loginUsername,
+      password: loginPassword,
+    };
+
+    fetch("http://127.0.0.1:5000/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        // Handle the response data
+        console.log(data);
+        // Save the access token and user ID to cookies
+        Cookies.set("access_token", data.access_token);
+        Cookies.set("user_id", data.user_id.toString());
+        navigate("/");
+      })
+      .catch((error) => {
+        // Handle any errors
+        console.error(error);
+        toast.error("Login Failed!");
+      });
   };
 
   const handleSignUp = () => {
+    toast.warning("Feature not yet implemented!");
     console.log("Sign up dengan input manual");
     console.log("Username:", signupUsername);
     console.log("Email:", signupEmail);

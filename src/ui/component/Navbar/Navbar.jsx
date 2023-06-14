@@ -11,12 +11,34 @@ import {
 } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
+import { toast } from "react-toastify";
 
 export function Navbar() {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    // Check if the access_token cookie is set
+    console.log(Cookies.get("access_token"));
+    if (Cookies.get("access_token")) {
+      console.log("Logged in");
+      setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
+    }
+  }, []);
+
+  const handleLogout = () => {
+    // Clear the access_token cookie or perform any logout actions
+    toast.info("You have been logged off");
+    Cookies.remove("access_token");
+    Cookies.remove("user_id");
+    setIsLoggedIn(false);
+  };
 
   const handleClick = () => {
     navigate(`search/${searchQuery}`);
@@ -54,9 +76,17 @@ export function Navbar() {
           <Link to={"/fyt"}>
             <Button colorScheme="whiteAlpha">FYT</Button>
           </Link>
-          <Link to={"/login"}>
-            <Button colorScheme="whiteAlpha">Login</Button>
-          </Link>
+          {isLoggedIn ? (
+            <Link to={"/"}>
+              <Button colorScheme="red" onClick={handleLogout}>
+                Logout
+              </Button>
+            </Link>
+          ) : (
+            <Link to={"/login"}>
+              <Button colorScheme="green">Login</Button>
+            </Link>
+          )}
         </HStack>
       </Flex>
     </Box>
