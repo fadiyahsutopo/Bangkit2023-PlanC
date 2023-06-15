@@ -3,6 +3,7 @@ import { Hero } from "../../component/Hero/Hero";
 import { LongCard } from "../../component/LongCard/LongCard";
 import { Category } from "../../component/Categories/Category";
 import React, { useEffect, useState } from "react";
+import Cookies from "js-cookie";
 
 export function Home() {
   const [categoriesData, setCategoriesData] = useState(null);
@@ -13,9 +14,17 @@ export function Home() {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        console.log(Cookies.get("access_token"));
+        let recommendLink = "http://34.173.237.22:5000/recommend/12/5";
+        if (Cookies.get("access_token")) {
+          recommendLink = `http://34.173.237.22:5000/recommend/${Cookies.get(
+            "user_id"
+          )}/5`;
+        }
+        console.log(recommendLink);
         const urls = [
           "http://34.173.237.22:5000/categories",
-          "http://34.173.237.22:5000/recommend/12/5",
+          recommendLink,
           "http://34.173.237.22:5000/nearest",
         ];
         const responses = await Promise.all(urls.map((url) => fetch(url)));
