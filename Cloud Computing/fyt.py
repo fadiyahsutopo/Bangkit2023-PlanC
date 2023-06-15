@@ -26,17 +26,18 @@ def load_and_preprocess_image(image_url):
 
 def extract_image_features(data, model):
     image_features = pd.DataFrame(
-        columns=['user_id', 'image_feature', 'content_url'])
+        columns=['user_id', 'category', 'image_feature', 'content_url'])
 
     for index, row in data.iterrows():
         user_id = row['user_id']
         image_url = row['image_url']
+        category = row['category']
         print(image_url)
 
         image = load_and_preprocess_image(image_url)
         features = model.predict(np.expand_dims(image, axis=0))
-        image_features = image_features.append({'user_id': user_id, 'image_feature': features.flatten(
-        ), 'content_url': str(image_url)}, ignore_index=True)
+        image_features = image_features.append({'user_id': user_id, 'category': str(
+            category), 'image_feature': features.flatten(), 'content_url': str(image_url)}, ignore_index=True)
 
     merged_data = pd.merge(data, image_features, on='user_id')
     print("Data berhasil diekstraksi:")
@@ -57,6 +58,14 @@ def recommend_similar_images(data, new_image_url, top_n=10):
 
     recommended_images = data.iloc[sorted_indices]
     return recommended_images
+
+
+def categorize(recommended_images):
+    categories = []
+    for category in recommended_images['category']:
+        categories.append(category)
+    grouping = categories.max(categories, key=categories.count)
+    return grouping
 
 
 def update_data():

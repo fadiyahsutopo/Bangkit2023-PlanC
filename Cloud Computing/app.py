@@ -236,17 +236,15 @@ def login():
     return jsonify({'access_token': access_token, 'user_id': user_id, 'username': username})
 
 
-@app.route('/fyt', methods=["POST", "GET"])
-@app.route('/fyt/<int:num>', methods=["POST", "GET"])
-def fytpage(num=10):
+@app.route('/fyt')
+@app.route('/fyt/<int:user_id>')
+def fytpage(num=10, user_id=12):
     users = pd.read_csv(
         'https://storage.googleapis.com/planc-product-capstone-bucket/keras/users.csv')
-    img_url = 'https://storage.googleapis.com/planc-product-capstone-bucket/user_img/user_img/gunung/1_gunung.jpg'
+    fyt_data = pd.read_csv(
+        'https://storage.googleapis.com/planc-product-capstone-bucket/fyt/PlanC.csv')
 
-    if req.method == "POST":
-        data = req.json
-        img_url = data.get("photos")
-
+    img_url = fyt_data[fyt_data['user_id'] == user_id].iloc[-1]['image_url']
     for_your_trip = fyt.for_your_trip(img_url, num)
 
     fyt_page = []
