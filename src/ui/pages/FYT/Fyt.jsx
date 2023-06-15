@@ -68,11 +68,15 @@ export function Fyt() {
       const formData = new FormData();
       formData.append("image", selectedImage);
       axios
-        .post("http://34.173.237.22:5000/upload", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        })
+        .post(
+          `http://34.173.237.22:5000/upload/${Cookies.get("user_id")}`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        )
         .then((response) => {
           // Handle successful response
           console.log("Image uploaded successfully");
