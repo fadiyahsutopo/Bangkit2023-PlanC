@@ -54,7 +54,7 @@ export function Navbar() {
     <Box bg="#180E55" py={4} px={6} color="white">
       <Flex alignItems="center">
         <Link to={"/"}>
-          <Heading size="md">Plan C</Heading>
+          <Heading size="md">PlanC</Heading>
         </Link>
         <InputGroup maxW="sm" mr={4} ml={10}>
           <Input
