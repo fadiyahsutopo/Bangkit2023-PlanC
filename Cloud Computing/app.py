@@ -233,7 +233,7 @@ def login():
         return jsonify({'message': 'User not found'}), 404
 
     user_id = int(filtered_user['user_id'].iloc[0])
-    username = int(filtered_user['username'].iloc[0])
+    username = str(filtered_user['username'].iloc[0])
 
     access_token = create_access_token(identity=username)
 
