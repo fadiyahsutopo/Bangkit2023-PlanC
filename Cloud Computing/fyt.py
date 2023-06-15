@@ -64,9 +64,9 @@ def categorize(recommended_images):
     categories = []
     for category in recommended_images['category']:
         categories.append(category)
-    grouping = categories.max(categories, key=categories.count)
+    grouping = max(categories, key=categories.count)
+    print(grouping)
     return grouping
-
 
 def update_data():
     global data_planc
@@ -75,7 +75,7 @@ def update_data():
     response = request.urlretrieve(
         "https://storage.googleapis.com/planc-product-capstone-bucket/fyt/classifications.h5", "classifications.h5")
     response = request.urlretrieve(
-        "https://storage.googleapis.com/planc-product-capstone-bucket/fyt/PlanC.csv", "PlanC.csv")
+        "https://storage.googleapis.com/planc-product-capstone-bucket/fyt/PlanCFix.csv", "PlanC.csv")
     model_planc = tf.keras.models.load_model('classifications.h5')
     data_planc = pd.read_csv('PlanC.csv')
     extracted_data = extract_image_features(data_planc, model_planc)

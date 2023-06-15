@@ -200,12 +200,16 @@ def upload(user_id):
     username = users[users['user_id'] == user_id].iloc[0]['username']
 
     fyt_data = pd.read_csv(
-    'https://storage.googleapis.com/planc-product-capstone-bucket/fyt/PlanC.csv')
+    'https://storage.googleapis.com/planc-product-capstone-bucket/fyt/PlanCFix.csv')
     image_id = fyt_data.tail(1)['image_id'].iloc[0]
     image_id += 1
 
-    append_to_csv('planc-product-capstone-bucket', 'fyt/PlanC.csv',
-                  [user_id, username, category_name, image_id, image_url], service_account_key)
+    category = fyt.categorize(fyt.for_your_trip(image_url, 10))
+
+    public_url = append_to_csv('planc-product-capstone-bucket', 'fyt/PlanCFix.csv',
+                  [user_id, username, category, image_id, image_url], service_account_key)
+    
+    print(public_url)
 
     return jsonify({
         "message": "Image uploaded to bucket",
@@ -242,7 +246,7 @@ def fytpage(num=10, user_id=12):
     users = pd.read_csv(
         'https://storage.googleapis.com/planc-product-capstone-bucket/keras/users.csv')
     fyt_data = pd.read_csv(
-        'https://storage.googleapis.com/planc-product-capstone-bucket/fyt/PlanC.csv')
+        'https://storage.googleapis.com/planc-product-capstone-bucket/fyt/PlanCFix.csv')
 
     img_url = fyt_data[fyt_data['user_id'] == user_id].iloc[-1]['image_url']
     for_your_trip = fyt.for_your_trip(img_url, num)
