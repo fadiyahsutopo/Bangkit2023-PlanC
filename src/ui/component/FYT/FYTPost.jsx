@@ -1,15 +1,14 @@
 import { Text, VStack, Image } from "@chakra-ui/react";
-import Beautiful from "../../../assets/images/beautiful.jpg";
 
-export function FYTPost() {
+export function FYTPost(props) {
   return (
     <>
       <VStack w="full">
         <VStack w="80%">
           <Text alignSelf={"flex-start"} fontWeight={"bold"} fontSize={"30px"}>
-            salsaselasa
+            {props.title}
           </Text>
-          <Image src={Beautiful} w="full" />
+          <Image src={props.photo} w="full" />
         </VStack>
       </VStack>
     </>
