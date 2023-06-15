@@ -185,8 +185,8 @@ def append_to_csv(bucket_name, file_name, data, service_account_key):
     return blob.public_url
 
 
-@app.route('/upload', methods=['POST'])
-def upload():
+@app.route('/upload/<int:user_id>', methods=['POST'])
+def upload(user_id):
     if 'image' not in req.files:
         return "No file found", 400
 
@@ -195,11 +195,21 @@ def upload():
     image_url = upload_image_to_bucket(
         'planc-product-capstone-bucket', req.files['image'], service_account_key)
 
-    append_to_csv('planc-product-capstone-bucket', 'keras/fyt.csv',
-                  ["1", image_url], service_account_key)
+    users = pd.read_csv(
+    'https://storage.googleapis.com/planc-product-capstone-bucket/keras/users.csv')
+    username = users[users['user_id'] == user_id].iloc[0]['username']
+
+    fyt_data = pd.read_csv(
+    'https://storage.googleapis.com/planc-product-capstone-bucket/fyt/PlanC.csv')
+    image_id = fyt_data.tail(1)['image_id'].iloc[0]
+    image_id += 1
+
+    append_to_csv('planc-product-capstone-bucket', 'fyt/PlanC.csv',
+                  [user_id, username, category_name, image_id, image_url], service_account_key)
 
     return jsonify({
-        "message": f"Image uploaded to bucket"
+        "message": "Image uploaded to bucket",
+        "photo": image_url
     })
 
 
@@ -218,11 +228,12 @@ def login():
     if filtered_user.empty:
         return jsonify({'message': 'User not found'}), 404
 
-    username_id = int(filtered_user['user_id'].iloc[0])
+    user_id = int(filtered_user['user_id'].iloc[0])
+    username = int(filtered_user['username'].iloc[0])
 
     access_token = create_access_token(identity=username)
 
-    return jsonify({'access_token': access_token, 'user_id': username_id})
+    return jsonify({'access_token': access_token, 'user_id': user_id, 'username': username})
 
 
 @app.route('/fyt', methods=["POST", "GET"])
