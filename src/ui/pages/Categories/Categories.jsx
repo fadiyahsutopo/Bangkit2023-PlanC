@@ -14,7 +14,7 @@ export function Categories() {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `http://34.30.121.154:5000/category/${id}`
+          `http://34.173.237.22:5000/category/${id}`
         );
         const jsonData = await response.json();
         setCategoriesData(jsonData);

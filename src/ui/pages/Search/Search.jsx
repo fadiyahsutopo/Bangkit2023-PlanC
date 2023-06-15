@@ -13,7 +13,9 @@ export function Search() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`http://127.0.0.1:5000/search/${query}`);
+        const response = await fetch(
+          `http://34.173.237.22:5000/search/${query}`
+        );
         const jsonData = await response.json();
         setsearchData(jsonData);
         console.log(jsonData);

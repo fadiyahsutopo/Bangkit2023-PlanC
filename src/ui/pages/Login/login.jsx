@@ -30,7 +30,7 @@ export function Login() {
       password: loginPassword,
     };
 
-    fetch("http://127.0.0.1:5000/login", {
+    fetch("http://34.173.237.22:5000/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

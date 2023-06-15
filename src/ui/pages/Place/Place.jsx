@@ -13,7 +13,7 @@ export function Place(props) {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `http://34.30.121.154:5000/destination/${id}`
+          `http://34.173.237.22:5000/destination/${id}`
         );
         const jsonData = await response.json();
         setPlaceData(jsonData);

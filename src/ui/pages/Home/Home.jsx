@@ -14,9 +14,9 @@ export function Home() {
     const fetchData = async () => {
       try {
         const urls = [
-          "http://34.30.121.154:5000/categories",
-          "http://34.30.121.154:5000/recommend/12/5",
-          "http://34.30.121.154:5000/nearest",
+          "http://34.173.237.22:5000/categories",
+          "http://34.173.237.22:5000/recommend/12/5",
+          "http://34.173.237.22:5000/nearest",
         ];
         const responses = await Promise.all(urls.map((url) => fetch(url)));
         const jsonDatas = await Promise.all(
