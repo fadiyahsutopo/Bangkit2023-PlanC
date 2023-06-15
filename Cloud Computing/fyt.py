@@ -44,23 +44,18 @@ def extract_image_features(data, model):
 
 
 def recommend_similar_images(data, new_image_url, top_n=10):
-    # Ekstraksi fitur gambar baru
     new_image = load_and_preprocess_image(new_image_url)
     new_image = np.expand_dims(new_image, axis=0)
     new_image_feature = model_planc.predict(new_image).flatten()
 
-    # Cosine similarity for new image - dummy
     image_feature_vectors = np.vstack(data['image_feature'].values)
     cosine_sim_matrix = cosine_similarity(
         image_feature_vectors, np.expand_dims(new_image_feature, axis=0))
 
-    # Sorting similarity
     similarity_scores = cosine_sim_matrix.flatten()
     sorted_indices = np.argsort(similarity_scores)[::-1][:top_n]
 
-    # Rekomendasi top n gambar similar
     recommended_images = data.iloc[sorted_indices]
-
     return recommended_images
 
 
@@ -78,23 +73,9 @@ def update_data():
     return 'Model Update Success'
 
 
-# Initialization
 update_data()
 
 
 def for_your_trip(image_url, top_n):
     new_image_url = image_url
     return recommend_similar_images(extracted_data, image_url, top_n)
-
-
-# new_image_url = 'https://storage.googleapis.com/planc-product-capstone-bucket/user_img/user_img/gunung/1_gunung.jpg'
-# recommended_images = recommend_similar_images(
-#     extract_image_features(data, model), new_image_url, top_n=10)
-
-# print(recommended_images)
-
-# for i in range(10):
-#     print(recommended_images['content_url'].iloc[i])
-
-# print(recommended_images['content_url'])
-# print(recommended_images['content_url'].iloc[0])

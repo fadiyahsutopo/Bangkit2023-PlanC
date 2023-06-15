@@ -187,7 +187,6 @@ def append_to_csv(bucket_name, file_name, data, service_account_key):
 
 @app.route('/upload', methods=['POST'])
 def upload():
-
     if 'image' not in req.files:
         return "No file found", 400
 
@@ -219,7 +218,6 @@ def login():
     if filtered_user.empty:
         return jsonify({'message': 'User not found'}), 404
 
-    # Get the value of 'username_id' column from the first row
     username_id = int(filtered_user['user_id'].iloc[0])
 
     access_token = create_access_token(identity=username)
@@ -227,11 +225,29 @@ def login():
     return jsonify({'access_token': access_token, 'user_id': username_id})
 
 
-@app.route('/fyt')
-@app.route('/fyt/<int:num>')
+@app.route('/fyt', methods=["POST", "GET"])
+@app.route('/fyt/<int:num>', methods=["POST", "GET"])
 def fytpage(num=10):
+    users = pd.read_csv(
+        'https://storage.googleapis.com/planc-product-capstone-bucket/keras/users.csv')
     img_url = 'https://storage.googleapis.com/planc-product-capstone-bucket/user_img/user_img/gunung/1_gunung.jpg'
-    fyt_page = fyt.for_your_trip(img_url, num).to_json(orient='records')
+
+    if req.method == "POST":
+        data = req.json
+        img_url = data.get("photos")
+
+    for_your_trip = fyt.for_your_trip(img_url, num)
+
+    fyt_page = []
+    for idx in for_your_trip.index:
+        user_id = for_your_trip['user_id'][idx]
+        username = users[users['user_id'] == user_id].iloc[0]['username']
+        photos = for_your_trip['content_url'][idx]
+        fyt_page.append({'user_id': user_id,
+                         'username': username,
+                         'photos': photos})
+    fyt_page = json.dumps(fyt_page)
+
     return fyt_page
 
 
@@ -245,10 +261,6 @@ def update():
         "https://storage.googleapis.com/planc-product-capstone-bucket/keras/user_rating.csv", "user_rating.csv")
     response = request.urlretrieve(
         "https://storage.googleapis.com/planc-product-capstone-bucket/keras/users.csv", "users.csv")
-    # response = request.urlretrieve(
-    #     "https://storage.googleapis.com/planc-product-capstone-bucket/fyt/classifications.h5", "classifications.h5")
-    # response = request.urlretrieve(
-    #     "https://storage.googleapis.com/planc-product-capstone-bucket/fyt/PlanC.csv", "PlanC.csv")
     fyt.update_data()
     return 'Update Success'
 
