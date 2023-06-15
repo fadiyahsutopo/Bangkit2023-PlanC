@@ -41,9 +41,10 @@ export function Login() {
       .then((data) => {
         // Handle the response data
         console.log(data);
-        // Save the access token and user ID to cookies
+        // Save the access token and user ID to cookies, username
         Cookies.set("access_token", data.access_token);
         Cookies.set("user_id", data.user_id.toString());
+        Cookies.set("username", data.username);
         navigate("/");
       })
       .catch((error) => {

@@ -8,6 +8,7 @@ import {
   InputRightElement,
   Button,
   HStack,
+  Text,
 } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
 import { Link } from "react-router-dom";
@@ -34,9 +35,12 @@ export function Navbar() {
 
   const handleLogout = () => {
     // Clear the access_token cookie or perform any logout actions
-    toast.info("You have been logged off");
+    toast.info("You have been logged off", {
+      position: toast.POSITION.TOP_LEFT, // Set the desired position here
+    });
     Cookies.remove("access_token");
     Cookies.remove("user_id");
+    Cookies.remove("username");
     setIsLoggedIn(false);
   };
 
@@ -77,11 +81,14 @@ export function Navbar() {
             <Button colorScheme="whiteAlpha">FYT</Button>
           </Link>
           {isLoggedIn ? (
-            <Link to={"/"}>
-              <Button colorScheme="red" onClick={handleLogout}>
-                Logout
-              </Button>
-            </Link>
+            <>
+              <Link to={"/"}>
+                <Button colorScheme="red" onClick={handleLogout}>
+                  Logout
+                </Button>
+              </Link>
+              <Text>Hi, {Cookies.get("username")}</Text>
+            </>
           ) : (
             <Link to={"/login"}>
               <Button colorScheme="green">Login</Button>
